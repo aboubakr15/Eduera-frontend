@@ -1,65 +1,117 @@
-import React from 'react';
+import React from "react";
+import { Facebook, Instagram, Mail } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
+const quickLinks = ["About Us", "Reviews", "Community", "FAQs"];
+const legalLinks = ["Privacy Policy", "Terms of Service", "Cookie Policy"];
+const socialLinks = [
+  {
+    name: "Facebook",
+    icon: <Facebook size={28} className="text-blue-500" />,
+    href: "#facebook",
+  },
+  {
+    name: "Instagram",
+    icon: <Instagram size={28} className="text-pink-500" />,
+    href: "#instagram",
+  },
+];
 
 const Footer = () => {
-    return (
-        <footer className="bg-[#103741] text-white pt-24 pb-8 relative overflow-hidden border-t border-white/5">
-            {/* Massive Background Typography using pseudo-element equivalent in React if simpler, or sticking to class approach. 
-                Tailwind arbitrary values for content property are tricky with spaces. 
-                Alternatively, use a span.
-             */}
-            <div className="absolute -bottom-[50px] left-1/2 -translate-x-1/2 text-[15rem] font-black text-white/2 z-0 pointer-events-none -tracking-[10px] select-none whitespace-nowrap opacity-[0.02]">
-                EDUERA
-            </div>
+  const navigate = useNavigate();
 
-            <div className="container mx-auto px-5 grid grid-cols-1 md:grid-cols-[2fr_1fr_1fr_1fr] gap-16 mb-20 relative z-10">
-                <div className="footer-section">
-                    <h3 className="mb-6 text-[#F48C06] text-3xl -tracking-[1px] font-bold font-[var(--font-heading)]">EduEra</h3>
-                    <p className="text-white/60 leading-loose max-w-[300px]">Empowering learners worldwide.</p>
-                </div>
-                <div className="footer-section">
-                    <h4 className="mb-6 text-white text-lg font-semibold uppercase tracking-widest font-[var(--font-heading)]">Quick Links</h4>
-                    <ul>
-                        {['Home', 'Courses', 'About Us', 'Contact'].map((item, index) => (
-                            <li key={index} className="mb-4">
-                                <a href={`#${item.toLowerCase().replace(' ', '')}`} className="text-white/60 transition-all relative no-underline hover:text-[#F48C06] group">
-                                    {item}
-                                    <span className="absolute -bottom-0.5 left-0 w-0 h-[1px] bg-[#F48C06] transition-all duration-300 group-hover:w-full"></span>
-                                </a>
-                            </li>
-                        ))}
-                    </ul>
-                </div>
-                <div className="footer-section">
-                    <h4 className="mb-6 text-white text-lg font-semibold uppercase tracking-widest font-[var(--font-heading)]">Legal</h4>
-                    <ul>
-                        {['Privacy Policy', 'Terms of Service'].map((item, index) => (
-                            <li key={index} className="mb-4">
-                                <a href={`#${item.toLowerCase().replace(' ', '')}`} className="text-white/60 transition-all relative no-underline hover:text-[#F48C06] group">
-                                    {item}
-                                    <span className="absolute -bottom-0.5 left-0 w-0 h-[1px] bg-[#F48C06] transition-all duration-300 group-hover:w-full"></span>
-                                </a>
-                            </li>
-                        ))}
-                    </ul>
-                </div>
-                <div className="footer-section">
-                    <h4 className="mb-6 text-white text-lg font-semibold uppercase tracking-widest font-[var(--font-heading)]">Follow Us</h4>
-                    <div className="flex flex-col gap-4">
-                        {['Facebook', 'Twitter', 'Instagram'].map((item, index) => (
-                            <a key={index} href={`#${item.toLowerCase()}`} className="text-white/60 transition-all relative no-underline hover:text-[#F48C06] group w-fit">
-                                {item}
-                                <span className="absolute -bottom-0.5 left-0 w-0 h-[1px] bg-[#F48C06] transition-all duration-300 group-hover:w-full"></span>
-                            </a>
-                        ))}
-                    </div>
-                </div>
-            </div>
-            <div className="pt-8 border-t border-white/5 relative z-10 flex justify-center text-white/40 text-sm bg-[#103741]">
-                <p>&copy; {new Date().getFullYear()} EduEra. All rights reserved.</p>
-            </div>
-        </footer>
-    );
+  return (
+    <footer className="bg-white text-[#1B2036] pt-24 pb-8 relative overflow-hidden border-t border-white/5">
+      <div className="container mx-auto px-20 grid grid-cols-1 md:grid-cols-[2fr_1fr_1fr] gap-16 mb-16 relative z-10">
+        <div>
+          <div
+            className="flex items-center mb-5 cursor-pointer"
+            onClick={() => navigate("/#")}
+          >
+            <img
+              src="/logo.png"
+              alt="EDUera"
+              className="w-16 h-16 mr-2 object-contain"
+            />
+            <span className="font-serif font-bold text-3xl text-[#1B2036] tracking-wide">
+              EDUera
+            </span>
+          </div>
+          <p className="text-[#1B2036]/60 leading-relaxed max-w-[300px] mb-8">
+            AI-Powered University Management & Learning Platform for modern
+            education.
+          </p>
+        </div>
+
+        <div>
+          <h4 className="mb-6 text-[#1B2036] text-lg font-semibold uppercase tracking-widest">
+            Quick Links
+          </h4>
+          <ul className="flex flex-col gap-4">
+            {quickLinks.map((item) => (
+              <li key={item}>
+                <a
+                  href={`#${item.toLowerCase().replace(" ", "")}`}
+                  className="text-[#1B2036]/60 hover:text-orange-400 transition-colors duration-200 relative group w-fit block"
+                >
+                  {item}
+                  <span className="absolute -bottom-0.5 left-0 w-0 h-[1px] bg-orange-400 transition-all duration-300 group-hover:w-full" />
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div>
+          <h4 className="mb-6 text-[#1B2036] text-lg font-semibold uppercase tracking-widest">
+            Contact Us
+          </h4>
+
+          <div className="flex items-center gap-3 text-[#1B2036]/60 mb-6">
+            <Mail size={18} className="text-orange-400" />
+            <a
+              href="mailto:support@eduai.edu"
+              className="hover:text-orange-400 transition-colors duration-200"
+            >
+              support@eduai.edu
+            </a>
+          </div>
+
+          <div className="flex items-center gap-4">
+            {socialLinks.map((social) => (
+              <a
+                key={social.name}
+                href={social.href}
+                className="hover:scale-110 transition-transform duration-200"
+                aria-label={social.name}
+              >
+                {social.icon}
+              </a>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div className="border-t border-white/10 relative z-10" />
+
+      <div className="relative z-10 flex flex-col items-center gap-4 pt-8 px-10">
+        <p className="text-[#1B2036]/40 text-sm">
+          © {new Date().getFullYear()} Eduera Platform. All rights reserved.
+        </p>
+        <div className="flex items-center gap-6">
+          {legalLinks.map((item) => (
+            <a
+              key={item}
+              href={`#${item.toLowerCase().replace(" ", "")}`}
+              className="text-[#1B2036]/40 text-sm hover:text-orange-400 transition-colors duration-200"
+            >
+              {item}
+            </a>
+          ))}
+        </div>
+      </div>
+    </footer>
+  );
 };
 
 export default Footer;

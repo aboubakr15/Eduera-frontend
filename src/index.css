@@ -1,12 +1,14 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap');
-
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Style+Script&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Tiro+Devanagari+Hindi&display=swap");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   body {
-    @apply bg-secondary text-text-dark font-sans antialiased;
+    @apply bg-[#fffdfd] text-text-dark font-sans antialiased;
   }
 
   h1,
@@ -34,5 +36,12 @@
 
   .glass-card:hover {
     @apply bg-white/80 -translate-y-0.5 shadow-lg;
+  }
+  .font-style-script {
+    font-family: "Style Script", cursive;
+  }
+
+  .font-tiro-devanagari {
+    font-family: "Tiro Devanagari Hindi", serif;
   }
 }

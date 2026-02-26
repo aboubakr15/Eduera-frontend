@@ -1,34 +1,57 @@
-import React from 'react';
-
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
-    return (
-        <nav className="fixed top-0 left-0 w-full z-50 bg-[#103741]/85 backdrop-blur-xl border-b border-white/5 transition-all duration-300 py-4">
-            <div className="container mx-auto px-5 flex justify-between items-center">
-                <div className="logo">
-                    <h2 className="text-white text-3xl font-bold cursor-pointer font-[var(--font-heading)]">EduEra</h2>
-                </div>
-                <ul className="flex gap-12 font-medium">
-                    {['Home', 'About us', 'Contact Us', 'Community'].map((item) => (
-                        <li key={item}>
-                            <a
-                                href={`#${item.toLowerCase().replace(' ', '')}`}
-                                className="text-white/80 transition-all hover:text-white"
-                            >
-                                {item}
-                            </a>
-                        </li>
-                    ))}
-                </ul>
-                <div className="flex gap-4 items-center">
-                    <span className="text-white mr-4 cursor-pointer font-medium">English ▾</span>
-                    <button className="bg-[#F48C06] text-white px-8 py-3 rounded-full font-semibold transition-all shadow-[0_4px_15px_rgba(244,140,6,0.3)] hover:bg-[#e07b00] hover:-translate-y-0.5">
-                        Login
-                    </button>
-                </div>
-            </div>
-        </nav>
-    );
+  const navigate = useNavigate();
+  const [scrolled, setScrolled] = useState(false);
+  return (
+    <nav
+      className={`fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-16 h-16 bg-white transition-all duration-300 ${
+        scrolled ? "shadow-md" : "border-b border-gray-200"
+      }`}
+    >
+      <div className="flex items-center cursor-pointer">
+        {() => navigate("/#")}
+        <img
+          src="/logo.png"
+          alt="EDUera"
+          className="w-16 h-16 mr-2 object-contain cursor-pointer"
+        />
+        <span className="font-serif font-bold text-3xl text-gray-900 tracking-wide">
+          EDUera
+        </span>
+      </div>
+
+      <div className="flex items-center gap-10">
+        {["Home", "About us", "Contact Us", "Community"].map((link) => (
+          <a
+            key={link}
+            href="#"
+            className="font-serif text-[18px] text-gray-700 hover:text-orange-500 transition-colors duration-200 no-underline"
+          >
+            {link}
+          </a>
+        ))}
+
+        <div className="flex items-center gap-2">
+          <span className="font-serif text-[18px] text-gray-700">English</span>
+          <div className="w-6 h-4 rounded-full bg-orange-500 relative cursor-pointer">
+            <div className="absolute right-1 top-1 w-3 h-2 rounded-full bg-white" />
+          </div>
+        </div>
+
+        <button
+          onClick={() => navigate("/login")}
+          className="bg-gradient-to-r from-[#1B2036] to-[#474F73] 
+             hover:from-[#D67A1E] hover:to-[#CE904E]
+             text-white font-Inter text-[15px] px-6 py-1.5 rounded-lg
+             hover:-translate-y-0.5 transition-all duration-200 cursor-pointer border-none"
+        >
+          Login
+        </button>
+      </div>
+    </nav>
+  );
 };
 
 export default Navbar;
