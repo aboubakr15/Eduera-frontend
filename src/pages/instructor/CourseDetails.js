@@ -1,15 +1,17 @@
 import { useState, useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import { instructorApi } from "../../api/instructorApi";
 import { FaBook, FaUsers, FaFileAlt, FaClipboardList } from "react-icons/fa";
+import { ArrowLeft } from "lucide-react";
 
 const InstructorCourseDetails = () => {
   const { id } = useParams();
   const [course, setCourse] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [activeTab, setActiveTab] = useState('materials');
-
+  const [activeTab, setActiveTab] = useState("materials");
+  const navigate = useNavigate();
+  const [enrolledStudents, setEnrolledStudents] = useState([]);
   useEffect(() => {
     const fetchCourse = async () => {
       try {
@@ -18,7 +20,9 @@ const InstructorCourseDetails = () => {
           response = await instructorApi.getCourseDetails(id);
         } catch (e) {
           const coursesRes = await instructorApi.getCourses();
-          const foundCourse = coursesRes.data.find(c => c.id === parseInt(id) || c.id === id);
+          const foundCourse = coursesRes.data.find(
+            (c) => c.id === parseInt(id) || c.id === id,
+          );
           if (foundCourse) {
             response = { data: foundCourse };
           } else {
@@ -28,18 +32,33 @@ const InstructorCourseDetails = () => {
         setCourse(response.data);
       } catch (err) {
         console.error("Error:", err.response || err);
-        setError(err.response?.data?.message || err.response?.data?.detail || "Failed to load course details");
+        setError(
+          err.response?.data?.message ||
+            err.response?.data?.detail ||
+            "Failed to load course details",
+        );
       } finally {
         setLoading(false);
       }
     };
+
+    const fetchEnrolledStudents = async () => {
+      try {
+        const res = await instructorApi.getStudents({ course_offering: id });
+        setEnrolledStudents(res.data);
+      } catch (err) {
+        console.error("Failed to fetch enrolled students:", err);
+      }
+    };
+
     fetchCourse();
+    fetchEnrolledStudents();
   }, [id]);
 
   if (loading) {
     return (
       <div className="flex-1 flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#D67A1E]"></div>
       </div>
     );
   }
@@ -47,115 +66,259 @@ const InstructorCourseDetails = () => {
   if (error) {
     return (
       <div className="flex-1 flex flex-col items-center justify-center min-h-screen p-4">
-        <div className="text-red-500 mb-4">{error}</div>
-        <Link to="/instructor/courses" className="text-blue-600 hover:underline">← Back to Courses</Link>
+        <div className="bg-red-50 text-red-600 p-4 rounded-xl mb-4 font-medium text-sm border border-red-100">
+          {error}
+        </div>
+        <Link
+          to="/instructor/courses"
+          className="text-sm text-[#D67A1E] font-semibold hover:underline"
+        >
+          ← Back to Courses
+        </Link>
       </div>
     );
   }
 
   return (
     <div className="flex-1 flex flex-col overflow-y-auto p-4">
-      <div className="mb-6">
-        <Link to="/instructor/courses" className="text-sm text-blue-600 hover:underline mb-2 inline-block">← Back to Courses</Link>
-        <h1 className="text-2xl font-bold text-gray-800">{course?.course_name}</h1>
-        <p className="text-sm text-gray-400">{course?.course_code} • {course?.semester} {course?.year}</p>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center">
-              <FaUsers className="text-blue-600" size={20} />
-            </div>
-            <div>
-              <p className="text-xs text-gray-400">Enrolled</p>
-              <p className="text-lg font-bold text-gray-800">{course?.enrolled_count}/{course?.capacity}</p>
-            </div>
-          </div>
-        </div>
-        <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-green-50 rounded-xl flex items-center justify-center">
-              <FaFileAlt className="text-green-600" size={20} />
-            </div>
-            <div>
-              <p className="text-xs text-gray-400">Materials</p>
-              <p className="text-lg font-bold text-gray-800">{course?.materials?.length || 0}</p>
-            </div>
-          </div>
-        </div>
-        <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-amber-50 rounded-xl flex items-center justify-center">
-              <FaClipboardList className="text-amber-600" size={20} />
-            </div>
-            <div>
-              <p className="text-xs text-gray-400">Assignments</p>
-              <p className="text-lg font-bold text-gray-800">{course?.assignments?.length || 0}</p>
-            </div>
+      {/* Header */}
+      <div className="flex items-center gap-4 mb-8">
+        <button
+          onClick={() => navigate(-1)}
+          className="flex items-center text-gray-400 hover:text-[#1B2036] transition-all group"
+        >
+          <ArrowLeft
+            size={20}
+            className="transition-transform group-hover:-translate-x-1"
+          />
+        </button>
+        <div>
+          <h1 className="text-2xl font-bold text-gray-800">
+            {course?.course_name}
+          </h1>
+          <div className="flex items-center gap-2 mt-0.5">
+            <p className="text-sm text-gray-400">
+              {course?.course_code} • {course?.semester} {course?.year}
+            </p>
+            {course?.is_active !== undefined && (
+              <span
+                className={`text-xs px-2 py-0.5 rounded-md font-medium ${
+                  course.is_active
+                    ? "bg-emerald-50 text-emerald-600"
+                    : "bg-gray-100 text-gray-500"
+                }`}
+              >
+                {course.is_active ? "Active" : "Inactive"}
+              </span>
+            )}
           </div>
         </div>
       </div>
 
-      <div className="flex gap-2 mb-4">
-        {['materials', 'assignments', 'students'].map(tab => (
-          <button key={tab} onClick={() => setActiveTab(tab)} className={`px-4 py-2 rounded-xl text-sm font-medium ${activeTab === tab ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-600'}`}>
+      {/* Stats Section (Fluid under each other, not rigid grid) */}
+      <div className="flex flex-col sm:flex-row gap-4 mb-8">
+        <div className="flex-1 bg-white rounded-2xl p-4 shadow-sm border border-gray-100 flex items-center gap-3 border-l-4 border-l-blue-500">
+          <div className="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center flex-shrink-0">
+            <FaUsers className="text-blue-600" size={18} />
+          </div>
+          <div>
+            <p className="text-xs text-gray-400">Enrolled Students</p>
+            <p className="text-lg font-bold text-gray-800">
+              {course?.enrolled_count || 0}/{course?.capacity || 0}
+            </p>
+          </div>
+        </div>
+
+        <div className="flex-1 bg-white rounded-2xl p-4 shadow-sm border border-gray-100 flex items-center gap-3 border-l-4 border-l-emerald-500">
+          <div className="w-10 h-10 bg-emerald-50 rounded-xl flex items-center justify-center flex-shrink-0">
+            <FaFileAlt className="text-emerald-600" size={18} />
+          </div>
+          <div>
+            <p className="text-xs text-gray-400">Materials</p>
+            <p className="text-lg font-bold text-gray-800">
+              {course?.materials?.length || 0}
+            </p>
+          </div>
+        </div>
+
+        <div className="flex-1 bg-white rounded-2xl p-4 shadow-sm border border-gray-100 flex items-center gap-3 border-l-4 border-l-amber-500">
+          <div className="w-10 h-10 bg-amber-50 rounded-xl flex items-center justify-center flex-shrink-0">
+            <FaClipboardList className="text-amber-600" size={18} />
+          </div>
+          <div>
+            <p className="text-xs text-gray-400">Assignments</p>
+            <p className="text-lg font-bold text-gray-800">
+              {course?.assignments?.length || 0}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Tabs */}
+      <div className="flex gap-2 mb-6">
+        {["materials", "assignments", "students"].map((tab) => (
+          <button
+            key={tab}
+            onClick={() => setActiveTab(tab)}
+            className={`px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${
+              activeTab === tab
+                ? "bg-[#282f4f] text-white shadow-sm"
+                : "bg-white text-gray-500 border border-gray-100 hover:bg-gray-50"
+            }`}
+          >
             {tab.charAt(0).toUpperCase() + tab.slice(1)}
           </button>
         ))}
       </div>
 
-      <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
-        {activeTab === 'materials' && (
-          <div className="space-y-3">
+      {/* Tab Content - Individual Cards under each other */}
+      <div className="pb-8">
+        {activeTab === "materials" && (
+          <div className="space-y-4">
             {course?.materials?.length > 0 ? (
-              course.materials.map(m => (
-                <div key={m.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
-                  <div>
-                    <p className="text-sm font-medium text-gray-800">{m.title}</p>
-                    <p className="text-xs text-gray-400">{m.material_type} • {m.file_type}</p>
+              course.materials.map((m) => (
+                <div
+                  key={m.id}
+                  className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 border-l-4 border-l-[#5362a3] flex items-center justify-between"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-orange-50 rounded-xl flex items-center justify-center flex-shrink-0">
+                      <FaFileAlt className="text-[#D67A1E]" size={16} />
+                    </div>
+                    <div>
+                      <p className="text-sm font-bold text-gray-800">
+                        {m.title}
+                      </p>
+                      <div className="flex items-center gap-2 mt-1">
+                        <span className="text-xs text-blue-600 bg-blue-50 px-2 py-0.5 rounded-md font-medium">
+                          {m.material_type}
+                        </span>
+                        <span className="text-xs text-gray-400 uppercase">
+                          {m.file_type}
+                        </span>
+                      </div>
+                    </div>
                   </div>
-                  <a href={m.file_url} target="_blank" rel="noopener noreferrer" className="text-blue-600 text-sm hover:underline">View</a>
+                  <a
+                    href={m.file_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm text-[#D67A1E] font-semibold hover:underline flex-shrink-0"
+                  >
+                    View File
+                  </a>
                 </div>
               ))
-            ) : <p className="text-gray-400">No materials uploaded</p>}
+            ) : (
+              <EmptyState
+                icon={<FaFileAlt size={28} />}
+                text="No materials uploaded yet."
+              />
+            )}
           </div>
         )}
 
-        {activeTab === 'assignments' && (
-          <div className="space-y-3">
+        {activeTab === "assignments" && (
+          <div className="space-y-4">
             {course?.assignments?.length > 0 ? (
-              course.assignments.map(a => (
-                <div key={a.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
-                  <div>
-                    <p className="text-sm font-medium text-gray-800">{a.title}</p>
-                    <p className="text-xs text-gray-400">Due: {new Date(a.due_date).toLocaleDateString()} • {a.total_points} points</p>
+              course.assignments.map((a) => (
+                <div
+                  key={a.id}
+                  className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 border-l-4 border-l-[#5362a3] flex items-center justify-between"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-orange-50 rounded-xl flex items-center justify-center flex-shrink-0">
+                      <FaClipboardList className="text-[#D67A1E]" size={16} />
+                    </div>
+                    <div>
+                      <p className="text-sm font-bold text-gray-800">
+                        {a.title}
+                      </p>
+                      <div className="flex items-center gap-2 mt-1 text-xs text-gray-400">
+                        <span>
+                          Due:{" "}
+                          {new Date(a.due_date).toLocaleDateString("en-US", {
+                            month: "short",
+                            day: "numeric",
+                            year: "numeric",
+                          })}
+                        </span>
+                        <span>•</span>
+                        <span className="text-amber-600 font-medium">
+                          {parseInt(a.total_points)} Pts
+                        </span>
+                      </div>
+                    </div>
                   </div>
-                  <span className="text-sm text-gray-500">{a.submission_count} submissions</span>
+                  <span className="text-sm text-gray-500 font-medium flex-shrink-0 bg-gray-50 px-2.5 py-1 rounded-lg">
+                    {a.submission_count || 0} Submissions
+                  </span>
                 </div>
               ))
-            ) : <p className="text-gray-400">No assignments</p>}
+            ) : (
+              <EmptyState
+                icon={<FaClipboardList size={28} />}
+                text="No assignments created yet."
+              />
+            )}
           </div>
         )}
 
-        {activeTab === 'students' && (
-          <div className="space-y-3">
-            {course?.enrolled_students?.length > 0 ? (
-              course.enrolled_students.map(s => (
-                <div key={s.enrollment_id} className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
-                  <div>
-                    <p className="text-sm font-medium text-gray-800">{s.student_name}</p>
-                    <p className="text-xs text-gray-400">{s.student_email}</p>
+        {activeTab === "students" && (
+          <div className="space-y-4">
+            {enrolledStudents.length > 0 ? (
+              enrolledStudents.map((s) => (
+                <div
+                  key={s.enrollment_id}
+                  className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 border-l-4 border-l-[#5362a3] flex items-center justify-between"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center flex-shrink-0">
+                      <FaUsers className="text-gray-500" size={16} />
+                    </div>
+                    <div>
+                      <p className="text-sm font-bold text-gray-800">
+                        {s.student_name}
+                      </p>
+                      <p className="text-xs text-gray-400 mt-0.5">
+                        {s.student_email}
+                      </p>
+                    </div>
                   </div>
-                  <span className={`text-xs px-2 py-1 rounded-full ${s.status === 'ACTIVE' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600'}`}>{s.status}</span>
+                  <span
+                    className={`text-xs px-2.5 py-1 rounded-lg font-medium flex-shrink-0 ${
+                      s.status === "ACTIVE"
+                        ? "bg-emerald-50 text-emerald-600"
+                        : "bg-gray-100 text-gray-500"
+                    }`}
+                  >
+                    {s.status}
+                  </span>
                 </div>
               ))
-            ) : <p className="text-gray-400">No students enrolled</p>}
+            ) : (
+              <EmptyState
+                icon={<FaUsers size={28} />}
+                text="No students enrolled in this course."
+              />
+            )}
           </div>
         )}
       </div>
     </div>
   );
 };
+
+// Reusable Empty State Component to keep code clean
+const EmptyState = ({ icon, text }) => (
+  <div className="flex-1 flex items-center justify-center mt-10">
+    <div className="bg-white rounded-2xl p-12 shadow-sm border border-gray-100 text-center max-w-sm w-full">
+      <div className="w-16 h-16 bg-gray-50 rounded-2xl flex items-center justify-center mx-auto mb-4 text-gray-300">
+        {icon}
+      </div>
+      <p className="text-sm text-gray-400">{text}</p>
+    </div>
+  </div>
+);
 
 export default InstructorCourseDetails;

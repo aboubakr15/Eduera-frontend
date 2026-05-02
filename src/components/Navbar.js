@@ -13,9 +13,9 @@ const Navbar = () => {
       <div className="flex items-center cursor-pointer">
         {() => navigate("/#")}
         <img
-          src="/logo.png"
+          src="/logo.svg"
           alt="EDUera"
-          className="w-16 h-16 mr-2 object-contain cursor-pointer"
+          className="w-8 h-8 mr-2 object-contain cursor-pointer"
         />
         <span className="font-serif font-bold text-3xl text-gray-900 tracking-wide">
           EDUera

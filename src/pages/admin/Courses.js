@@ -29,6 +29,7 @@ const Courses = () => {
     department: "",
     description: "",
   });
+  const navigate = useNavigate();
 
   const departments = [
     { id: 1, name: "Computer Science" },
@@ -161,7 +162,6 @@ const Courses = () => {
   const pageIds = paginated.map((c) => c.id);
   const allPageSelected =
     pageIds.length > 0 && pageIds.every((id) => selected.includes(id));
-  const navigate = useNavigate();
 
   return (
     <div className="min-h-screen font-sans">

@@ -29,9 +29,9 @@ const Footer = () => {
             onClick={() => navigate("/#")}
           >
             <img
-              src="/logo.png"
+              src="/logo.svg"
               alt="EDUera"
-              className="w-16 h-16 mr-2 object-contain"
+              className="w-8 h-8 mr-2 object-contain"
             />
             <span className="font-serif font-bold text-3xl text-[#1B2036] tracking-wide">
               EDUera

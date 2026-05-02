@@ -32,17 +32,18 @@ import StudentProfile from "../pages/student/Profile";
 import StudentChat from "../pages/student/Chat";
 import StudentNotifications from "../pages/student/Notifications";
 
-import InstructorDashboard from "../pages/Instructor/Dashboard";
-import InstructorCourses from "../pages/Instructor/Courses";
-import InstructorMaterials from "../pages/Instructor/Materials";
-import InstructorAssignments from "../pages/Instructor/Assignments";
-import InstructorSubmissions from "../pages/Instructor/Submissions";
-import InstructorStudents from "../pages/Instructor/Students";
-import InstructorAnnouncements from "../pages/Instructor/Announcements";
-import InstructorChat from "../pages/Instructor/Chat";
-import InstructorNotifications from "../pages/Instructor/Notifications";
+import InstructorDashboard from "../pages/instructor/Dashboard";
+import InstructorCourses from "../pages/instructor/Courses";
+import InstructorMaterials from "../pages/instructor/Materials";
+import InstructorAssignments from "../pages/instructor/Assignments";
+import InstructorSubmissions from "../pages/instructor/Submissions";
+import InstructorStudents from "../pages/instructor/Students";
+import InstructorAnnouncements from "../pages/instructor/Announcements";
+import InstructorChat from "../pages/instructor/Chat";
+import InstructorNotifications from "../pages/instructor/Notifications";
+import InstructorAccount from "../pages/instructor/Account";
 
-import InstructorCourseDetails from "../pages/Instructor/CourseDetails";
+import InstructorCourseDetails from "../pages/instructor/CourseDetails";
 
 export const router = createBrowserRouter([
   {
@@ -115,6 +116,7 @@ export const router = createBrowserRouter([
           { path: "announcements", element: <InstructorAnnouncements /> },
           { path: "chat", element: <InstructorChat /> },
           { path: "notifications", element: <InstructorNotifications /> },
+          { path: "account", element: <InstructorAccount /> },
         ],
       },
     ],
