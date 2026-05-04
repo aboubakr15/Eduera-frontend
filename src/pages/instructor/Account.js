@@ -109,12 +109,6 @@ const Account = () => {
     { label: "University", key: "university" },
   ];
 
-  const stats = [
-    { label: "Total Students", value: 1200 },
-    { label: "Total Courses", value: 340 },
-    { label: "Total TAs", value: 210 },
-  ];
-
   return (
     <div className="ml-4 max-w-5xl">
       <div className="px-2 pt-4 pb-6 flex items-center gap-3">
@@ -244,17 +238,6 @@ const Account = () => {
               <option value="Asia/Dubai">Dubai (GMT+4)</option>
             </select>
           </div>
-        </div>
-      </SectionCard>
-
-      <SectionCard title="System Overview">
-        <div className="inline-grid grid-cols-[auto_auto] gap-x-10 gap-y-4">
-          {stats.map(({ label, value }) => (
-            <div key={label} className="contents">
-              <p className="text-sm text-gray-500">{label}</p>
-              <p className="text-sm font-bold text-gray-800">{value}</p>
-            </div>
-          ))}
         </div>
       </SectionCard>
 

@@ -1,7 +1,12 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { instructorApi } from "../../api/instructorApi";
-import { FaCheck, FaFileAlt, FaCalendarAlt, FaUser } from "react-icons/fa";
+import {
+  FaCheck,
+  FaFileAlt,
+  FaChevronLeft,
+  FaChevronRight,
+} from "react-icons/fa";
 import { ArrowLeft } from "lucide-react";
 
 const InstructorSubmissions = () => {
@@ -10,6 +15,9 @@ const InstructorSubmissions = () => {
   const [showGradeModal, setShowGradeModal] = useState(false);
   const [selectedSubmission, setSelectedSubmission] = useState(null);
   const [gradeData, setGradeData] = useState({ grade: "", notes: "" });
+  const [selected, setSelected] = useState([]);
+  const [page, setPage] = useState(1);
+  const perPage = 8;
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -50,6 +58,29 @@ const InstructorSubmissions = () => {
     }
   };
 
+  const paginated = submissions.slice((page - 1) * perPage, page * perPage);
+  const totalPages = Math.ceil(submissions.length / perPage);
+
+  const toggleSelect = (id) => {
+    setSelected((prev) =>
+      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id],
+    );
+  };
+
+  const toggleAll = () => {
+    const pageIds = paginated.map((s) => s.id);
+    const allSelected = pageIds.every((id) => selected.includes(id));
+    if (allSelected) {
+      setSelected((prev) => prev.filter((id) => !pageIds.includes(id)));
+    } else {
+      setSelected((prev) => [...new Set([...prev, ...pageIds])]);
+    }
+  };
+
+  const pageIds = paginated.map((s) => s.id);
+  const allPageSelected =
+    pageIds.length > 0 && pageIds.every((id) => selected.includes(id));
+
   if (loading)
     return (
       <div className="flex items-center justify-center h-screen">
@@ -58,65 +89,122 @@ const InstructorSubmissions = () => {
     );
 
   return (
-    <div className="flex-1 flex flex-col overflow-y-auto p-4">
+    <div className="min-h-screen font-sans">
       {/* Header */}
-      <div className="flex items-center gap-4 mb-8">
+      <div className="px-4 pt-4 pb-6 flex items-center gap-4">
         <button
           onClick={() => navigate(-1)}
-          className="flex items-center text-gray-400 hover:text-[#1B2036] transition-all group"
+          className="flex items-center text-gray-500 hover:text-[#1B2036] transition-all group"
         >
           <ArrowLeft
             size={20}
             className="transition-transform group-hover:-translate-x-1"
           />
         </button>
-        <div>
-          <h1 className="text-2xl font-bold text-gray-800">Submissions</h1>
-          <p className="text-sm text-gray-400 flex items-center gap-2 mt-0.5">
-            Review and grade student submissions
+        <h1 className="text-2xl font-bold text-gray-800 tracking-tight">
+          Submissions
+        </h1>
+      </div>
+
+      <div className="mx-2 bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+          <h2 className="font-bold text-gray-800 text-base">
+            Submissions Information
             {submissions.length > 0 && (
-              <span className="bg-blue-50 text-blue-600 px-2 py-0.5 rounded-md text-xs font-semibold">
+              <span className="ml-2 bg-blue-50 text-blue-600 px-2 py-0.5 rounded-md text-xs font-semibold">
                 {submissions.length} Pending
               </span>
             )}
-          </p>
+          </h2>
         </div>
-      </div>
 
-      {submissions.length > 0 && (
-        <div className="space-y-4">
-          {submissions.map((s) => (
-            <div
-              key={s.id}
-              className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 border-l-4 border-l-[#5362a3]"
-            >
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-1 flex-wrap">
-                    <span className="text-sm font-bold text-gray-800 flex items-center gap-1.5">
-                      <FaUser size={11} className="text-gray-400" />
-                      {s.student_name}
-                    </span>
-                    <span className="text-xs text-gray-500 bg-gray-50 px-2 py-1 rounded-md">
-                      {s.course_name}
-                    </span>
+        {/* Table */}
+        <table className="w-full">
+          <thead>
+            <tr className="bg-gray-50 border-b border-gray-100">
+              <th className="w-12 px-4 py-3">
+                <input
+                  type="checkbox"
+                  checked={allPageSelected}
+                  onChange={toggleAll}
+                  className="w-4 h-4 rounded accent-blue-500 cursor-pointer"
+                />
+              </th>
+              <th className="py-3 text-xs font-semibold text-gray-400 uppercase tracking-wider text-left px-2">
+                Student
+              </th>
+              <th className="py-3 text-xs font-semibold text-gray-400 uppercase tracking-wider text-left px-2">
+                Assignment
+              </th>
+              <th className="py-3 text-xs font-semibold text-gray-400 uppercase tracking-wider text-left px-2">
+                Course
+              </th>
+              <th className="py-3 text-xs font-semibold text-gray-400 uppercase tracking-wider text-left px-2">
+                Date
+              </th>
+              <th className="py-3 text-xs font-semibold text-gray-400 uppercase tracking-wider text-left px-2">
+                Status
+              </th>
+              <th className="py-3 text-xs font-semibold text-gray-400 uppercase tracking-wider text-left px-2">
+                Grade
+              </th>
+              <th className="py-3 text-xs font-semibold text-gray-400 uppercase tracking-wider text-left px-2">
+                Action
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {loading ? (
+              <tr>
+                <td colSpan={8} className="text-center py-16 text-gray-300">
+                  <div className="flex items-center justify-center gap-2">
+                    <div className="w-6 h-6 border-2 border-gray-200 border-t-[#D67A1E] rounded-full animate-spin"></div>
+                    <p className="text-sm">Loading submissions...</p>
                   </div>
-
-                  <h3 className="text-base font-semibold text-gray-700 mb-2">
+                </td>
+              </tr>
+            ) : paginated.length === 0 ? (
+              <tr>
+                <td colSpan={8} className="text-center py-16 text-gray-300">
+                  <FaFileAlt size={32} className="mx-auto mb-3 opacity-30" />
+                  <p className="text-sm">No submissions found</p>
+                </td>
+              </tr>
+            ) : (
+              paginated.map((s) => (
+                <tr
+                  key={s.id}
+                  className={`border-b border-gray-100 transition-colors hover:bg-gray-50 ${
+                    selected.includes(s.id) ? "bg-blue-50" : ""
+                  }`}
+                >
+                  <td className="px-4 py-3">
+                    <input
+                      type="checkbox"
+                      checked={selected.includes(s.id)}
+                      onChange={() => toggleSelect(s.id)}
+                      className="w-4 h-4 rounded accent-blue-500 cursor-pointer"
+                    />
+                  </td>
+                  <td className="py-3 px-2 font-semibold text-gray-800 text-sm">
+                    {s.student_name}
+                  </td>
+                  <td className="py-3 px-2 text-sm text-gray-600">
                     {s.assignment_title}
-                  </h3>
-
-                  <div className="flex items-center gap-3 text-xs text-gray-400 flex-wrap">
-                    <span className="flex items-center gap-1">
-                      <FaCalendarAlt size={10} />
-                      {new Date(s.submission_date).toLocaleDateString("en-US", {
-                        month: "short",
-                        day: "numeric",
-                        year: "numeric",
-                      })}
-                    </span>
+                  </td>
+                  <td className="py-3 px-2 text-sm text-gray-400">
+                    {s.course_name}
+                  </td>
+                  <td className="py-3 px-2 text-sm text-gray-400">
+                    {new Date(s.submission_date).toLocaleDateString("en-US", {
+                      month: "short",
+                      day: "numeric",
+                      year: "numeric",
+                    })}
+                  </td>
+                  <td className="py-3 px-2">
                     <span
-                      className={`px-2.5 py-1 rounded-lg font-medium ${
+                      className={`text-xs font-medium px-2.5 py-1 rounded-lg ${
                         s.status === "GRADED"
                           ? "bg-emerald-50 text-emerald-600"
                           : "bg-amber-50 text-amber-600"
@@ -124,71 +212,79 @@ const InstructorSubmissions = () => {
                     >
                       {s.status}
                     </span>
-                    {s.grade && (
-                      <span className="flex items-center gap-1 text-amber-600 bg-amber-50 px-2.5 py-1 rounded-lg font-medium">
-                        Grade: {parseInt(s.grade)}/100
+                  </td>
+                  <td className="py-3 px-2">
+                    {s.grade ? (
+                      <span className="text-sm font-medium text-amber-600 bg-amber-50 px-2.5 py-1 rounded-lg">
+                        {parseInt(s.grade)}/100
                       </span>
+                    ) : (
+                      <span className="text-sm text-gray-300">—</span>
                     )}
-                  </div>
-                </div>
+                  </td>
+                  <td className="py-3 px-2">
+                    <div className="flex items-center gap-2">
+                      {s.file_url && (
+                        <a
+                          href={s.file_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-gray-600 bg-gray-50 border border-gray-100 rounded-lg hover:bg-gray-100 transition-colors"
+                        >
+                          <FaFileAlt size={11} />
+                          View
+                        </a>
+                      )}
+                      {s.status !== "GRADED" && (
+                        <button
+                          onClick={() => {
+                            setSelectedSubmission(s);
+                            setShowGradeModal(true);
+                          }}
+                          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-white bg-[#282f4f] rounded-lg hover:opacity-90 transition-opacity"
+                        >
+                          <FaCheck size={11} />
+                          Grade
+                        </button>
+                      )}
+                    </div>
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
 
-                <div className="flex items-center gap-2 flex-shrink-0 sm:flex-col sm:items-end sm:gap-2">
-                  {s.file_url && (
-                    <a
-                      href={s.file_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-gray-600 bg-gray-50 border border-gray-100 rounded-lg hover:bg-gray-100 transition-colors"
-                    >
-                      <FaFileAlt size={12} />
-                      View File
-                    </a>
-                  )}
-                  {s.status !== "GRADED" && (
-                    <button
-                      onClick={() => {
-                        setSelectedSubmission(s);
-                        setShowGradeModal(true);
-                      }}
-                      className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-white bg-[#282f4f] rounded-lg hover:opacity-90 transition-opacity"
-                    >
-                      <FaCheck size={12} />
-                      Grade
-                    </button>
-                  )}
-                </div>
-              </div>
-
-              {s.notes && (
-                <div className="mt-4 pt-4 border-t border-gray-50">
-                  <p className="text-xs text-gray-500 bg-gray-50 p-3 rounded-lg italic leading-relaxed">
-                    <span className="font-semibold text-gray-600 not-italic">
-                      Feedback:
-                    </span>{" "}
-                    {s.notes}
-                  </p>
-                </div>
-              )}
-            </div>
+        <div className="flex items-center justify-center gap-3 py-5">
+          <button
+            onClick={() => setPage((p) => Math.max(1, p - 1))}
+            disabled={page === 1}
+            className="w-7 h-7 flex items-center justify-center rounded-full text-gray-500 hover:bg-gray-100 disabled:opacity-30 transition-colors"
+          >
+            <FaChevronLeft size={11} />
+          </button>
+          {Array.from({ length: totalPages || 1 }, (_, i) => i + 1).map((p) => (
+            <button
+              key={p}
+              onClick={() => setPage(p)}
+              className={`w-7 h-7 rounded-full text-sm font-medium transition-colors ${
+                page === p
+                  ? "bg-[#D67A1E] text-white"
+                  : "text-gray-500 hover:bg-gray-100"
+              }`}
+            >
+              {p}
+            </button>
           ))}
+          <button
+            onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+            disabled={page === totalPages || totalPages === 0}
+            className="w-7 h-7 flex items-center justify-center rounded-full text-gray-500 hover:bg-gray-100 disabled:opacity-30 transition-colors"
+          >
+            <FaChevronRight size={11} />
+          </button>
         </div>
-      )}
-
-      {submissions.length === 0 && (
-        <div className="flex-1 flex items-center justify-center mt-20">
-          <div className="bg-white rounded-2xl p-12 shadow-sm border border-gray-100 text-center max-w-sm w-full">
-            <div className="w-16 h-16 bg-gray-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
-              <FaFileAlt size={28} className="text-gray-300" />
-            </div>
-            <h3 className="text-lg font-bold text-gray-700 mb-1">
-              No Submissions Yet
-            </h3>
-            <p className="text-sm text-gray-400">
-              There are no student submissions to review right now.
-            </p>
-          </div>
-        </div>
-      )}
+      </div>
 
       {showGradeModal && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
@@ -206,7 +302,6 @@ const InstructorSubmissions = () => {
                 {selectedSubmission?.student_name}
               </span>
             </p>
-
             <form onSubmit={handleGrade} className="space-y-4">
               <div>
                 <label className="block text-xs font-semibold text-gray-500 mb-1.5 uppercase tracking-wide">
@@ -224,7 +319,6 @@ const InstructorSubmissions = () => {
                   required
                 />
               </div>
-
               <div>
                 <label className="block text-xs font-semibold text-gray-500 mb-1.5 uppercase tracking-wide">
                   Feedback / Notes
@@ -239,7 +333,6 @@ const InstructorSubmissions = () => {
                   placeholder="Provide constructive feedback to the student..."
                 />
               </div>
-
               <div className="flex gap-3 pt-4 border-t border-gray-100 mt-6">
                 <button
                   type="button"
