@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const navigate = useNavigate();
-  const [scrolled, setScrolled] = useState(false);
   return (
     <nav
       className={`fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-16 h-16 bg-white transition-all duration-300 ${
@@ -24,13 +23,12 @@ const Navbar = () => {
 
       <div className="flex items-center gap-10">
         {["Home", "About us", "Contact Us", "Community"].map((link) => (
-          <a
+          <button
             key={link}
-            href="#"
-            className="font-serif text-[18px] text-gray-700 hover:text-orange-500 transition-colors duration-200 no-underline"
+            className="font-serif text-[18px] text-gray-700 hover:text-orange-500 transition-colors duration-200 no-underline bg-none border-none cursor-pointer"
           >
             {link}
-          </a>
+          </button>
         ))}
 
         <div className="flex items-center gap-2">

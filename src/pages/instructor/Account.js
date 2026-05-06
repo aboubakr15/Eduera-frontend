@@ -131,6 +131,7 @@ const Account = () => {
           <div className="relative w-20 h-20">
             <img
               src={user.avatar || defaultAvatar}
+              alt="User avatar"
               className="w-20 h-20 rounded-full object-cover border-2 border-gray-200"
             />
             <button

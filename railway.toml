@@ -6,3 +6,9 @@ buildCommand = "npm install && npm run build"
 startCommand = "node server.js"
 restartPolicyType = "on_failure"
 restartPolicyMaxRetries = 3
+
+[nixpacks]
+providers = ["node"]
+
+[nixpacks.variables]
+NODE_VERSION = "20"

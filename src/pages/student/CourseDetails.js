@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { studentApi } from "../../api/studentApi";
 import {
-  FaBook,
   FaFileAlt,
   FaClipboardList,
   FaChalkboardTeacher,

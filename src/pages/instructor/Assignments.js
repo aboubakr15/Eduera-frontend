@@ -4,7 +4,6 @@ import { instructorApi } from "../../api/instructorApi";
 import {
   FaPlus,
   FaClipboardList,
-  FaArrowRight,
   FaCalendarAlt,
   FaTrash,
   FaExclamationTriangle,

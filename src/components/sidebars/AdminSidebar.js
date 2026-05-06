@@ -17,7 +17,6 @@ import {
   FaRobot,
   FaSignOutAlt,
   FaUserTie,
-  FaUserSecret,
 } from "react-icons/fa";
 import Avatar from "../../assets/images/man.png";
 import { useNavigate } from "react-router-dom";

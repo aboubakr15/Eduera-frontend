@@ -1,6 +1,6 @@
-import { useState } from "react"; // ← مهم جداً! كنتي ناسية الـ import ده
+import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Bell, ChevronDown } from "lucide-react";
+import { Bell } from "lucide-react";
 import Avatar from "../assets/images/man.png";
 
 const staticNotifications = [

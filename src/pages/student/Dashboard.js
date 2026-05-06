@@ -2,8 +2,6 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { studentApi } from "../../api/studentApi";
 import {
-  FaBook,
-  FaChartLine,
   FaCheckCircle,
   FaBullhorn,
   FaArrowRight,

@@ -2,13 +2,7 @@ import React, { useState, useEffect } from "react";
 import heroImg from "../../assets/images/campus.jpg";
 
 const Hero = () => {
-  const [offset, setOffset] = useState({ x: 0, y: 0 });
-
   const handleMouseMove = (e) => {
-    const { clientX, clientY } = e;
-    const x = (clientX / window.innerWidth - 0.5) * 20;
-    const y = (clientY / window.innerHeight - 0.5) * 20;
-    setOffset({ x, y });
   };
 
   useEffect(() => {

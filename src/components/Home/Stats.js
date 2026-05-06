@@ -79,13 +79,8 @@ const CountUp = ({ value, label }) => {
 };
 
 const Stats = () => {
-  const [offset, setOffset] = useState({ x: 0, y: 0 });
   const [lineHeight, setLineHeight] = useState(20);
-  const handleMouseMove = (e) => {
-    const { clientX, clientY } = e;
-    const x = (clientX / window.innerWidth - 0.5) * 10;
-    const y = (clientY / window.innerHeight - 0.5) * 10;
-    setOffset({ x, y });
+  const handleScroll = () => {
   };
   const handleScroll = () => {
     const scrollTop = window.scrollY;

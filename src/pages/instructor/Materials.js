@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import {
   FaPlus,
   FaFileAlt,
-  FaArrowRight,
   FaTrash,
   FaExclamationTriangle,
 } from "react-icons/fa";
@@ -14,7 +13,6 @@ const InstructorMaterials = () => {
   const [materials, setMaterials] = useState([]);
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [filterCourse, setFilterCourse] = useState("");
   const [filterMaterialType, setFilterMaterialType] = useState("");

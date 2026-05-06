@@ -47,6 +47,7 @@ const CourseOfferings = () => {
 
   useEffect(() => {
     fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search, semester, yearFilter]);
 
   const fetchData = async () => {

@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import {
   FaPlus,
   FaRobot,
@@ -20,18 +20,12 @@ import {
   FaEdit,
   FaTrash,
   FaFile,
-  FaImage,
 } from "react-icons/fa";
-import { MdOutlineSlideshow } from "react-icons/md";
-import botImg from "../../assets/images/botImg.png";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 const UploadCenter = () => {
-  const [source] = useState("file");
   const [uploadedFile, setUploadedFile] = useState(null);
   const [isDragging, setIsDragging] = useState(false);
-  const [numSlides, setNumSlides] = useState("8");
-  const [style, setStyle] = useState("Academic");
   const [generated, setGenerated] = useState(false);
   const fileInputRef = useRef(null);
 

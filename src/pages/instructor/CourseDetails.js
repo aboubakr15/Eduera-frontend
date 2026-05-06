@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { instructorApi } from "../../api/instructorApi";
-import { FaBook, FaUsers, FaFileAlt, FaClipboardList } from "react-icons/fa";
+import { FaUsers, FaFileAlt, FaClipboardList } from "react-icons/fa";
 import { ArrowLeft } from "lucide-react";
 
 const InstructorCourseDetails = () => {

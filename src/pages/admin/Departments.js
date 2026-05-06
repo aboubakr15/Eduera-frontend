@@ -6,7 +6,6 @@ import {
   FaTrash,
   FaChevronLeft,
   FaChevronRight,
-  FaChevronDown,
   FaBuilding,
 } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";

@@ -9,7 +9,6 @@ import {
   FaUsers,
   FaBullhorn,
 } from "react-icons/fa";
-import { MdNotifications } from "react-icons/md";
 import { adminApi } from "../../api/adminApi";
 
 const departments = [

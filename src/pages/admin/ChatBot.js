@@ -20,7 +20,6 @@ import {
   FaEdit,
   FaTrash,
   FaFile,
-  FaImage,
 } from "react-icons/fa";
 import { MdOutlineSlideshow } from "react-icons/md";
 import botImg from "../../assets/images/botImg.png";

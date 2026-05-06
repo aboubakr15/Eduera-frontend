@@ -16,7 +16,6 @@ import {
   FaClipboardList,
   FaFileUpload,
   FaSignOutAlt,
-  FaUserTie,
   FaChalkboardTeacher,
   FaChevronDown,
 } from "react-icons/fa";

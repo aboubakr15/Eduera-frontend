@@ -6,7 +6,6 @@ const StudentChat = () => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
   const messagesEndRef = useRef(null);
 
   useEffect(() => {
@@ -33,11 +32,10 @@ const StudentChat = () => {
     setMessages(prev => [...prev, userMessage]);
     setInput("");
     setLoading(true);
-    setError(null);
 
     try {
       const response = await studentApi.sendChatMessage({ content: input });
-      const { user_message, ai_message } = response.data;
+      const { ai_message } = response.data;
       setMessages(prev => [...prev, ai_message]);
     } catch (err) {
       console.error("Failed to send message:", err);
