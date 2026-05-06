@@ -4,7 +4,6 @@ import { studentApi } from "../../api/studentApi";
 import {
   FaBook,
   FaChartLine,
-  FaGraduationCap,
   FaCheckCircle,
   FaBullhorn,
   FaArrowRight,
@@ -15,6 +14,7 @@ import {
 import { useAuth } from "../../context/AuthContext";
 import Avatar from "../../assets/images/man.png";
 import { useNavigate } from "react-router-dom";
+import stuImg from "../../assets/images/stu.png";
 
 function StatCard({ label, value, color, bg, onClick }) {
   return (
@@ -510,32 +510,51 @@ const StudentDashboard = () => {
           </div>
 
           {/* Motivational Card */}
-          <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl p-8 shadow-sm flex flex-col items-center text-center relative overflow-hidden">
-            <div className="absolute -top-12 -right-12 w-40 h-40 bg-gradient-to-br from-blue-300/20 to-purple-300/20 rounded-full blur-3xl animate-pulse"></div>
-            <div className="absolute -bottom-16 -left-16 w-48 h-48 bg-gradient-to-tr from-emerald-300/20 to-blue-300/20 rounded-full blur-3xl"></div>
+          <div className="bg-white/80 backdrop-blur-sm rounded-3xl pb-8 md:pb-10 shadow-xl shadow-gray-200/50 flex flex-col items-center text-center relative overflow-hidden border border-white/50">
+            <div className="absolute -top-20 -right-20 w-52 h-52 bg-gradient-to-br from-blue-400/20 to-purple-400/20 rounded-full blur-3xl animate-pulse"></div>
+            <div className="absolute -bottom-24 -left-24 w-60 h-60 bg-gradient-to-tr from-emerald-300/20 to-cyan-300/20 rounded-full blur-3xl"></div>
+            <div className="absolute top-4 left-4 w-20 h-20 border-2 border-dashed border-gray-200/50 rounded-full"></div>
 
-            <div className="mb-6 relative z-10">
-              <div className="relative">
-                <div className="absolute inset-0 bg-blue-300/20 rounded-full blur-2xl scale-110"></div>
-                <FaGraduationCap className="w-20 h-20 text-[#5362a3] relative z-10" />
-              </div>
+            <div className="relative z-10 w-full flex justify-center">
+              <img
+                src={stuImg}
+                alt="Student"
+                className="w-full h-auto drop-shadow-xl"
+              />
             </div>
 
-            <div className="relative z-10">
-              <h3 className="text-lg font-semibold text-gray-900 leading-tight mb-2">
-                Keep up the great work!
+            <div className="relative z-10 mb-6">
+              <h3 className="text-xl md:text-2xl font-bold text-gray-900 leading-tight mb-3">
+                Keep up the{" "}
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#5362a3] to-purple-600">
+                  <br></br>
+                  Great Work!
+                </span>
               </h3>
-              <p className="text-xs text-gray-600 leading-relaxed max-w-md">
+              <p className="text-sm text-gray-500 leading-relaxed max-w-sm mx-auto">
                 Consistency is the key to success. Keep learning and improving
-                your skills.
+                your skills to achieve your goals.
               </p>
             </div>
 
             <Link
               to="/student/courses"
-              className="relative z-10 mt-6 px-6 py-2 rounded-xl bg-[#282f4f] text-white text-sm font-normal transition-all shadow-lg hover:shadow-xl hover:scale-105 transform"
+              className="group relative z-10 inline-flex items-center gap-2 px-8 py-3 rounded-full bg-gradient-to-r from-[#282f4f] to-[#5362a3] text-white text-sm font-medium transition-all duration-300 shadow-lg shadow-[#282f4f]/20 hover:shadow-xl hover:shadow-[#5362a3]/30 hover:scale-105 transform"
             >
               My Courses
+              <svg
+                className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M17 8l4 4m0 0l-4 4m4-4H3"
+                />
+              </svg>
             </Link>
           </div>
         </div>
