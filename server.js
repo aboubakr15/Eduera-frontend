@@ -6,37 +6,46 @@ console.log('NODE_ENV env:', process.env.NODE_ENV);
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
-const { createProxyMiddleware } = require('http-proxy-middleware');
+const http = require('http');
+const https = require('https');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Backend URL from environment or default
 const BACKEND_URL = process.env.BACKEND_URL || 'https://graduation-project-production-be44.up.railway.app';
 console.log('Backend URL:', BACKEND_URL);
 
-// Proxy API requests to backend - strip /api prefix
-app.use('/api', createProxyMiddleware({
-  target: BACKEND_URL,
-  changeOrigin: true,
-  secure: false,
-  pathRewrite: {
-    '^/api': '',
-  },
-}));
+function proxyRequest(req, res) {
+  const url = BACKEND_URL + req.originalUrl.replace('/api', '');
+  console.log(`Proxying ${req.method} ${req.originalUrl} -> ${url}`);
 
-// Also proxy common auth routes without /api prefix
-app.use('/token', createProxyMiddleware({
-  target: BACKEND_URL,
-  changeOrigin: true,
-  secure: false,
-}));
+  const protocol = url.startsWith('https') ? https : http;
 
-app.use('/auth', createProxyMiddleware({
-  target: BACKEND_URL,
-  changeOrigin: true,
-  secure: false,
-}));
+  const proxyReq = protocol.request(url, {
+    method: req.method,
+    headers: {
+      ...req.headers,
+      host: new URL(BACKEND_URL).host,
+    },
+  }, (proxyRes) => {
+    res.status(proxyRes.statusCode);
+    proxyRes.headers && Object.entries(proxyRes.headers).forEach(([key, value]) => {
+      res.setHeader(key, value);
+    });
+    proxyRes.pipe(res);
+  });
+
+  proxyReq.on('error', (err) => {
+    console.error('Proxy error:', err.message);
+    res.status(502).send('Bad Gateway');
+  });
+
+  req.pipe(proxyReq);
+}
+
+app.use('/api', proxyRequest);
+app.use('/token', proxyRequest);
+app.use('/auth', proxyRequest);
 
 // Check if build folder exists
 const buildPath = path.join(__dirname, 'build');
