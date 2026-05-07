@@ -27,6 +27,7 @@ const UploadCenter = () => {
   const [uploadedFile, setUploadedFile] = useState(null);
   const [isDragging, setIsDragging] = useState(false);
   const [generated, setGenerated] = useState(false);
+  const [numSlides, setNumSlides] = useState(5); // Define numSlides state
   const fileInputRef = useRef(null);
 
   const canGenerate = !!uploadedFile;

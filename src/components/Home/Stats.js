@@ -81,18 +81,14 @@ const CountUp = ({ value, label }) => {
 const Stats = () => {
   const [lineHeight, setLineHeight] = useState(20);
   const handleScroll = () => {
-  };
-  const handleScroll = () => {
     const scrollTop = window.scrollY;
     const newHeight = Math.min(150, 20 + scrollTop * 0.5);
     setLineHeight(newHeight);
   };
 
   useEffect(() => {
-    window.addEventListener("mousemove", handleMouseMove);
     window.addEventListener("scroll", handleScroll);
     return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);

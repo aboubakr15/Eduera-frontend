@@ -7,6 +7,7 @@ const StudentChat = () => {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const messagesEndRef = useRef(null);
+  const [setError] = useState(null); // Define setError state
 
   useEffect(() => {
     const fetchHistory = async () => {
@@ -15,6 +16,7 @@ const StudentChat = () => {
         setMessages(response.data);
       } catch (err) {
         console.error("Failed to fetch chat history:", err);
+        setError("Failed to fetch chat history");
       }
     };
     fetchHistory();

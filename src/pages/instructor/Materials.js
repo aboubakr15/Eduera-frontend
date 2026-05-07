@@ -31,6 +31,7 @@ const InstructorMaterials = () => {
     material_type: "LECTURE",
   });
   const navigate = useNavigate();
+  const [setError] = useState(null); // Define setError state
 
   useEffect(() => {
     const fetchData = async () => {
