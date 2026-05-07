@@ -1,5 +1,5 @@
 # Stage 1: Build the React app
-FROM node:18-alpine as build
+FROM node:20-alpine as build
 WORKDIR /app
 
 COPY package*.json ./
@@ -9,7 +9,7 @@ COPY . .
 RUN npm run build
 
 # Stage 2: Serve with Node/Express
-FROM node:18-alpine
+FROM node:20-alpine
 WORKDIR /app
 
 RUN npm install -g express
