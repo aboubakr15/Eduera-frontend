@@ -1,29 +1,42 @@
 const express = require('express');
 const path = require('path');
-const app = express();
+const fs = require('fs');
 
+const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Check if build folder exists
+const buildPath = path.join(__dirname, 'build');
+if (!fs.existsSync(buildPath)) {
+  console.error('ERROR: build folder not found at', buildPath);
+  process.exit(1);
+}
+
 // Serve static files from the build directory
-app.use(express.static(path.join(__dirname, 'build')));
+app.use(express.static(buildPath));
 
 // Handle SPA routing - serve index.html for all non-file routes
 app.get('*', (req, res) => {
-  // Don't serve index.html for API routes or specific file requests
-  if (req.path.startsWith('/api') || req.path.includes('.')) {
-    res.status(404).send('Not Found');
-    return;
+  const indexPath = path.join(buildPath, 'index.html');
+  if (!fs.existsSync(indexPath)) {
+    return res.status(500).send('index.html not found in build folder');
   }
-  res.sendFile(path.join(__dirname, 'build', 'index.html'));
+  res.sendFile(indexPath);
 });
 
 // Error handling middleware
 app.use((err, req, res, next) => {
-  console.error('Error:', err);
+  console.error('Error:', err.stack || err);
   res.status(500).send('Internal Server Error');
 });
 
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
   console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
+  console.log(`Build path: ${buildPath}`);
+});
+
+server.on('error', (err) => {
+  console.error('Server failed to start:', err);
+  process.exit(1);
 });
