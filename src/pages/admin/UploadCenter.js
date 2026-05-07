@@ -1,24 +1,6 @@
 import { useState, useRef } from "react";
 import {
-  FaPlus,
-  FaRobot,
-  FaUser,
-  FaPaperPlane,
-  FaQuestionCircle,
-  FaCommentDots,
-  FaSearch,
-  FaChevronRight,
-  FaChevronDown,
-  FaEllipsisH,
-  FaBars,
   FaTimes,
-  FaPaperclip,
-  FaBrain,
-  FaBookOpen,
-  FaStar,
-  FaRegStar,
-  FaEdit,
-  FaTrash,
   FaFile,
 } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
@@ -27,7 +9,6 @@ const UploadCenter = () => {
   const [uploadedFile, setUploadedFile] = useState(null);
   const [isDragging, setIsDragging] = useState(false);
   const [generated, setGenerated] = useState(false);
-  const [numSlides, setNumSlides] = useState(5); // Define numSlides state
   const fileInputRef = useRef(null);
 
   const canGenerate = !!uploadedFile;

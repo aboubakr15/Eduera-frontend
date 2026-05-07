@@ -20,7 +20,7 @@ const StudentChat = () => {
       }
     };
     fetchHistory();
-  }, []);
+  }, [setError]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });

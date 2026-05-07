@@ -59,7 +59,7 @@ const InstructorMaterials = () => {
       setLoading(false);
     };
     fetchData();
-  }, []);
+  }, [setError]);
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];

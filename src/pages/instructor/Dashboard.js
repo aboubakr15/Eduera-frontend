@@ -2,9 +2,6 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { instructorApi } from "../../api/instructorApi";
 import {
-  FaUsers,
-  FaClipboardList,
-  FaFileAlt,
   FaBullhorn,
   FaArrowRight,
 } from "react-icons/fa";

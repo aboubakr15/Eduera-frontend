@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import {
   FaSearch,
-  FaEdit,
   FaChevronLeft,
   FaChevronRight,
   FaChevronDown,

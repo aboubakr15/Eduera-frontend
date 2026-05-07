@@ -266,7 +266,7 @@ const Stats = () => {
       <div className="flex justify-between items-center my-3 mt-12 px-10 stats-reveal stats-reveal-fade">
         <p className="text-[#D67A1E] font-serif text-xl">Our Departments</p>
         <a
-          href="#"
+          href="javascript:void(0);"
           className="text-gray-500 underline text-sm hover:text-gray-800 transition"
         >
           View All
