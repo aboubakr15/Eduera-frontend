@@ -15,8 +15,24 @@ const PORT = process.env.PORT || 3000;
 const BACKEND_URL = process.env.BACKEND_URL || 'https://graduation-project-production-be44.up.railway.app';
 console.log('Backend URL:', BACKEND_URL);
 
-// Proxy API requests to backend
+// Proxy API requests to backend - strip /api prefix
 app.use('/api', createProxyMiddleware({
+  target: BACKEND_URL,
+  changeOrigin: true,
+  secure: false,
+  pathRewrite: {
+    '^/api': '',
+  },
+}));
+
+// Also proxy common auth routes without /api prefix
+app.use('/token', createProxyMiddleware({
+  target: BACKEND_URL,
+  changeOrigin: true,
+  secure: false,
+}));
+
+app.use('/auth', createProxyMiddleware({
   target: BACKEND_URL,
   changeOrigin: true,
   secure: false,
