@@ -265,14 +265,15 @@ const Stats = () => {
 
       <div className="flex justify-between items-center my-3 mt-12 px-10 stats-reveal stats-reveal-fade">
         <p className="text-[#D67A1E] font-serif text-xl">Our Departments</p>
-        {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-        <a
-          href="#"
-          className="text-gray-500 underline text-sm hover:text-gray-800 transition cursor-pointer"
-          onClick={(e) => e.preventDefault()}
+        <button
+          type="button"
+          className="text-gray-500 underline text-sm hover:text-gray-800 transition cursor-pointer bg-transparent p-0"
+          onClick={() => {
+            // Add navigation or action here if needed
+          }}
         >
           View All
-        </a>
+        </button>
       </div>
 
       <div className="flex gap-10 px-10 ">
