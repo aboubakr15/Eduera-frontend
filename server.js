@@ -6,9 +6,21 @@ console.log('NODE_ENV env:', process.env.NODE_ENV);
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
+const { createProxyMiddleware } = require('http-proxy-middleware');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// Backend URL from environment or default
+const BACKEND_URL = process.env.BACKEND_URL || 'https://graduation-project-production-be44.up.railway.app';
+console.log('Backend URL:', BACKEND_URL);
+
+// Proxy API requests to backend
+app.use('/api', createProxyMiddleware({
+  target: BACKEND_URL,
+  changeOrigin: true,
+  secure: false,
+}));
 
 // Check if build folder exists
 const buildPath = path.join(__dirname, 'build');
